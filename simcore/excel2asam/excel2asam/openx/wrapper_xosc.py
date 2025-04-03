@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 # /*============================================================================
 # * \file wrapper_xosc.py
 # * \brief Generate xosc file conforming to OpenSCENARIO (V1.0.0) standard.
@@ -15,7 +14,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any, Callable, Dict, List, Optional, Union
+from typing import Any, Callable, Dict, List, Optional
 
 from loguru import logger
 from scenariogeneration import xosc
@@ -272,8 +271,8 @@ class WrapperEntities:
     def set_entities(
         self,
         entityname: str,
-        entityobject: Union[xosc.CatalogReference, xosc.Vehicle, xosc.Pedestrian, xosc.MiscObject],
-        controller: Union[xosc.CatalogReference, xosc.Controller, None] = None,
+        entityobject: xosc.CatalogReference | xosc.Vehicle | xosc.Pedestrian | xosc.MiscObject,
+        controller: xosc.CatalogReference | xosc.Controller | None = None,
     ) -> None:
         # 构建
         self._wrapper_entities.add_scenario_object(entityname, entityobject, controller)

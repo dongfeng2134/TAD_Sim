@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 # /*============================================================================
 # * \file formater.py
 # * \brief Read excel info which define by user, and then format info for gen xosc and xodr.

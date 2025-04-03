@@ -10,7 +10,7 @@ import glog
 from xlsxwriter import Workbook, Format
 
 CURRENT_PATH_PY = Path(__file__).resolve().parent
-sys.path.append(str(CURRENT_PATH_PY) + "../sim_msg")
+sys.path.append(f"{str(CURRENT_PATH_PY)}../sim_msg")
 sys.path.append(str(CURRENT_PATH_PY))
 
 from sim_msg import grading_pb2
@@ -20,7 +20,6 @@ from data_process import DataProcess
 
 @dataclass(order=True)
 class GradingProcess(DataProcess):
-
     def __post_init__(self) -> None:
         super().__post_init__()
 
@@ -114,18 +113,12 @@ class GradingProcess(DataProcess):
                     # Add 1 to the value of the "collision" key under the "column" key in the grading_data dictionary.
                     self.grading_data["column"]["collision"].append(1)
 
-                    collision_location_str = ""
                     times_collision = len(msg.collision)
                     counter_collision = 0
+                    collision_location_str = ""
                     for each_collision in msg.collision:
                         counter_collision = counter_collision + 1
-                        loc_str = (
-                            str(each_collision.location.x)
-                            + ", "
-                            + str(each_collision.location.y)
-                            + ", "
-                            + str(each_collision.location.z)
-                        )
+                        loc_str = f"{str(each_collision.location.x)}, {str(each_collision.location.y)}, {str(each_collision.location.z)}"
                         collision_location_str = collision_location_str + loc_str
                         if counter_collision < times_collision:
                             collision_location_str = collision_location_str + "\n"
@@ -170,7 +163,7 @@ class GradingProcess(DataProcess):
 
                 self.grading_data["column"]["is_ReachEndPoint"].append(msg.planning.is_reachEndpoint)
         except Exception as e:  # pylint: disable=broad-except
-            glog.error("pb | grading data error, " + str(e))
+            glog.error(f"pb | grading data error, {str(e)}")
 
     def get_dict_data(self) -> Dict:
         """

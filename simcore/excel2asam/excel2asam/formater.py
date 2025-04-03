@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 # /*============================================================================
 # * \file formater.py
 # * \brief Read excel info which define by user, and then format info for gen xosc and xodr.
@@ -16,11 +15,11 @@ from dataclasses import dataclass, field
 from functools import reduce
 from typing import Dict, Optional, Union
 
-import excel2asam.exceptions as exp
 import numpy as np
 import pandas as pd
 from loguru import logger
 
+import excel2asam.exceptions as exp
 from excel2asam.config import settings
 from excel2asam.map.lib.hadmap_py import Position, PositionLane, PositionWorld
 from excel2asam.utils import DtypeConverter, SceneFilter, convert_string, raise_error_reason_by_diff, safe_literal_eval

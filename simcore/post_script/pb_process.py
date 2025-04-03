@@ -16,7 +16,7 @@ import xlsxwriter
 import utils
 
 CURRENT_PATH_PY = Path(__file__).resolve().parent
-sys.path.append(str(CURRENT_PATH_PY) + "/sim_msg")
+sys.path.append(f"{str(CURRENT_PATH_PY)}/sim_msg")
 sys.path.append(str(CURRENT_PATH_PY))
 
 from data_process.chassis_process import ChassisProcess
@@ -89,55 +89,58 @@ class PostProcess:
         glog.info("pb | args %s.", str(self._args))
 
         if os.path.exists(self._args.pblog_file):
-            self.pb_log_file = self._args.pblog_file
-            self.pb_log_file_path = os.path.dirname(os.path.abspath(self.pb_log_file)) + "/"
-            self.pb_log_file_name = os.path.basename(self.pb_log_file)
+            return self._extracted_from_parse_arguments_6()
+        glog.error("usage: python PostProcess.py -f <pblogfile>")
+        return False
 
-            # new path for xlsx file
-            self.output_path = os.path.join(self.pb_log_file_path, "../" + self.utils.get_date_string_ymd() + "/")
+    # TODO Rename this here and in `parse_arguments`
+    def _extracted_from_parse_arguments_6(self):
+        self.pb_log_file = self._args.pblog_file
+        self.pb_log_file_path = f"{os.path.dirname(os.path.abspath(self.pb_log_file))}/"
+        self.pb_log_file_name = os.path.basename(self.pb_log_file)
 
-            try:
-                if not os.path.exists(self.output_path):
-                    os.mkdir(self.output_path)
-            except Exception as e:  # pylint: disable=broad-except
-                glog.error("error:{}".format(e))
-                traceback.print_exc()
+        # new path for xlsx file
+        self.output_path = os.path.join(self.pb_log_file_path, f"../{self.utils.get_date_string_ymd()}/")
 
-            self.xlsx_name = self.output_path + self.pb_log_file_name + ".xlsx"
+        try:
+            if not os.path.exists(self.output_path):
+                os.mkdir(self.output_path)
+        except Exception as e:  # pylint: disable=broad-except
+            glog.error(f"error:{e}")
+            traceback.print_exc()
 
-            glog.info("pb | output data dir is " + self.output_path)
-            glog.info("pb | output xlsx file is " + self.xlsx_name)
+        self.xlsx_name = self.output_path + self.pb_log_file_name + ".xlsx"
 
-            if self._args.grading:
-                self.tasks["grading_statistics"] = GradingStatistics()
-                self.tasks["grading"] = GradingProcess()
+        glog.info(f"pb | output data dir is {self.output_path}")
+        glog.info(f"pb | output xlsx file is {self.xlsx_name}")
 
-            if self._args.traffic:
-                self.tasks["traffic_car"] = TrafficCarProcess()
-                self.tasks["traffic_dynamic"] = TrafficDynamicProcess()
+        if self._args.grading:
+            self.tasks["grading_statistics"] = GradingStatistics()
+            self.tasks["grading"] = GradingProcess()
 
-            if self._args.pnc:
-                self.tasks["control"] = ControlProcess()
-                self.tasks["chassis"] = ChassisProcess()
-                glog.info("pb | enable pnc related protobuf data parser.")
+        if self._args.traffic:
+            self.tasks["traffic_car"] = TrafficCarProcess()
+            self.tasks["traffic_dynamic"] = TrafficDynamicProcess()
 
-            if self._args.imu_gps:
-                self.tasks["imu"] = ImuProcess()
-                self.tasks["imu_rigid"] = ImuRigidProcess()
-                self.tasks["gps"] = GpsProcess()
-                glog.info("pb | enable imu/gps protobuf data parser.")
+        if self._args.pnc:
+            self.tasks["control"] = ControlProcess()
+            self.tasks["chassis"] = ChassisProcess()
+            glog.info("pb | enable pnc related protobuf data parser.")
 
-            return True
-        else:
-            glog.error("usage: python PostProcess.py -f <pblogfile>")
-            return False
+        if self._args.imu_gps:
+            self.tasks["imu"] = ImuProcess()
+            self.tasks["imu_rigid"] = ImuRigidProcess()
+            self.tasks["gps"] = GpsProcess()
+            glog.info("pb | enable imu/gps protobuf data parser.")
+
+        return True
 
     def save_xlsx(self) -> None:
         """
         # save data into xlsx
         """
         workbook = xlsxwriter.Workbook(self.xlsx_name)
-        glog.info("pb | saving xlsx " + self.xlsx_name)
+        glog.info(f"pb | saving xlsx {self.xlsx_name}")
 
         style = workbook.add_format({"border": 1, "align": "center", "valign": "vcenter"})
 
@@ -151,7 +154,7 @@ class PostProcess:
             self.tasks[key] = self.tasks[key].get_dict_data()
 
     def delete_pblog(self, file_regular_expression: str = "*.pblog", max_reserve_number: int = 8):
-        glog.info("max_reserve_number is {}.".format(max_reserve_number))
+        glog.info(f"max_reserve_number is {max_reserve_number}.")
         if max_reserve_number < 0:
             glog.info("less than 0, no deletion.".format())
             return
@@ -165,11 +168,7 @@ class PostProcess:
                 pblog_files.append(file_full_path)
         pblog_number = len(pblog_files)
         if pblog_number <= max_reserve_number:
-            glog.info(
-                "{} file number in {} is <= {}, no deletion.".format(
-                    file_regular_expression, pblog_dir, max_reserve_number
-                )
-            )
+            glog.info(f"{file_regular_expression} file number in {pblog_dir} is <= {max_reserve_number}, no deletion.")
             return
 
         # sort by create time
@@ -177,7 +176,7 @@ class PostProcess:
 
         # do deletion
         for index in range(pblog_number - max_reserve_number):
-            glog.info("delete file:{}".format(pblog_files[index]))
+            glog.info(f"delete file:{pblog_files[index]}")
             os.remove(pblog_files[index])
 
     def compress_pblog(self, file_regular_expression: str = "*.pblog"):
@@ -193,29 +192,29 @@ class PostProcess:
 
         for pblog_file in pblog_files:
             with open(pblog_file, "rb") as f_in:
-                gzip_file = pblog_file + ".gz"
+                gzip_file = f"{pblog_file}.gz"
                 if os.path.exists(gzip_file):
-                    glog.info("{} exists, no compression.".format(gzip_file))
+                    glog.info(f"{gzip_file} exists, no compression.")
                     continue
                 with gzip.open(gzip_file, "wb") as zipped_file:
                     zipped_file.writelines(f_in)
-                glog.info("{} compressed.".format(gzip_file))
+                glog.info(f"{gzip_file} compressed.")
                 f_in.close()
 
     def process_pblog(self) -> None:
         # full path of pblog file
         self.pb_log_file = os.path.abspath(self.pb_log_file)
-        glog.info("full path of pblog file {}".format(self.pb_log_file))
+        glog.info(f"full path of pblog file {self.pb_log_file}")
 
         # check if pblog file exists
         if not os.path.exists(self.pb_log_file):
-            glog.error("{} does not exists.".format(self.pb_log_file))
+            glog.error(f"{self.pb_log_file} does not exists.")
 
         # compress .pblog files
         try:
             self.compress_pblog("*.pblog")
         except Exception as e:  # pylint: disable=broad-except
-            glog.error("error in compression {}".format(str(e)))
+            glog.error(f"error in compression {str(e)}")
 
         # process
         if self.pb_process.open_pblog(self.pb_log_file):
@@ -229,7 +228,7 @@ class PostProcess:
                 self.save_xlsx()
 
             except Exception as e:  # pylint: disable=broad-except
-                glog.error("error while post process {}".format(str(e)))
+                glog.error(f"error while post process {str(e)}")
             finally:
                 # close pblog file
                 self.pb_process.close_pblog()
@@ -239,12 +238,12 @@ class PostProcess:
                     # delete old .pblog files
                     self.delete_pblog("*.pblog", min(3, self._args.max_pblog_number))
                 except Exception as e:  # pylint: disable=broad-except
-                    glog.error("error in delete .pblog {}".format(str(e)))
+                    glog.error(f"error in delete .pblog {str(e)}")
                 try:
                     # keep latest self._args.max_pblog_number .pblog.gz files
                     self.delete_pblog("*.pblog.gz", self._args.max_pblog_number)
                 except Exception as e:  # pylint: disable=broad-except
-                    glog.error("error in delete .pblog.gz {}".format(str(e)))
+                    glog.error(f"error in delete .pblog.gz {str(e)}")
 
 
 if __name__ == "__main__":

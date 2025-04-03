@@ -4,13 +4,12 @@ import collections
 import sys
 from pathlib import Path
 from dataclasses import dataclass
-from typing import Dict
 
 import glog
 from xlsxwriter import Workbook, Format
 
 CURRENT_PATH_PY = Path(__file__).resolve().parent
-sys.path.append(str(CURRENT_PATH_PY) + "../sim_msg")
+sys.path.append(f"{str(CURRENT_PATH_PY)}../sim_msg")
 sys.path.append(str(CURRENT_PATH_PY))
 
 from sim_msg import control_pb2
@@ -20,7 +19,6 @@ from data_process import DataProcess
 
 @dataclass(order=True)
 class ControlProcess(DataProcess):
-
     def __post_init__(self) -> None:
         super().__post_init__()
 
@@ -33,7 +31,7 @@ class ControlProcess(DataProcess):
         self.control_json["column"]["targetFrontWheelAngle"] = []
         self.control_json["column"]["controlMode"] = []
 
-    def process_data(self, event: Dict) -> None:
+    def process_data(self, event: dict) -> None:
         """
         Define a method that handles the data, receiving an event as a parameter.
 
@@ -57,14 +55,14 @@ class ControlProcess(DataProcess):
                 self.control_json["column"]["targetFrontWheelAngle"].append(msg.acc_cmd.front_wheel_angle)
                 self.control_json["column"]["controlMode"].append(msg.control_mode)
         except Exception as e:  # pylint: disable=broad-except
-            glog.error("pb | control data error, " + str(e))
+            glog.error(f"pb | control data error, {str(e)}")
 
-    def get_dict_data(self) -> Dict:
+    def get_dict_data(self) -> dict:
         """
         Get and return dictionary data
 
         Returns:
-            Dict
+            dict
         """
 
         return self.control_json

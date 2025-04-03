@@ -19,7 +19,8 @@ set "TADSIM_BUILD_SCENARIO=%TADSIM_BUILD%\scenario"
 echo "=== Begin clean"
 @REM for /r %%f in (*.bat) do (attrib +r +a "%%f")
 @REM for /r /d %%D in (build node_modules) do rmdir /s /q "%%D" 2>nul
-IF EXIST "%TADSIM_BUILD%" rmdir /s /q "%TADSIM_BUILD%"
+@REM IF EXIST "%TADSIM_BUILD%" rmdir /s /q "%TADSIM_BUILD%"
+call :build_project "tools" "clean.bat"
 echo "=== End clean"
 
 @REM ======  Start compiling ======

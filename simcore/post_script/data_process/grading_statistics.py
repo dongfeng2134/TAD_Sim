@@ -10,7 +10,7 @@ import glog
 from xlsxwriter import Workbook, Format
 
 CURRENT_PATH_PY = Path(__file__).resolve().parent
-sys.path.append(str(CURRENT_PATH_PY) + "../sim_msg")
+sys.path.append(f"{str(CURRENT_PATH_PY)}../sim_msg")
 sys.path.append(str(CURRENT_PATH_PY))
 
 from sim_msg import grading_pb2
@@ -20,7 +20,6 @@ from data_process import DataProcess
 
 @dataclass(order=True)
 class GradingStatistics(DataProcess):
-
     def __post_init__(self) -> None:
         super().__post_init__()
 
@@ -56,13 +55,7 @@ class GradingStatistics(DataProcess):
                 self.grading_json["row"]["is_pass"] = msg.is_pass
 
                 # Determine if the message has passed
-                if not msg.is_pass:
-                    # If the message fails, log the reason in the row field of grading_json
-                    self.grading_json["row"]["reason"] = msg.reason
-                else:
-                    # If the message passes, clear the reason in the row field of grading_json
-                    self.grading_json["row"]["reason"] = ""
-
+                self.grading_json["row"]["reason"] = "" if msg.is_pass else msg.reason
                 self.grading_json["row"]["total_time"] = msg.total_time
                 self.grading_json["row"]["total_milleage"] = msg.total_milleage
                 self.grading_json["row"]["is_timeout"] = msg.is_timeout
@@ -204,7 +197,7 @@ class GradingStatistics(DataProcess):
                     }
                 )
         except Exception as e:  # pylint: disable=broad-except
-            glog.error("pb | grading statistics data error, " + str(e))
+            glog.error(f"pb | grading statistics data error, {str(e)}")
 
     def get_dict_data(self) -> Dict:
         """

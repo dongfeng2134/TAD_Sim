@@ -42,10 +42,13 @@ line-length = 120
 # McCabe complexity (`C901`) by default.
 ignore = []
 select = [
-  "E4",
-  "E7",
-  "E9",
-  "F",
+  # pycodestyle
+  "E", # Pyflakes
+  "F", # pyupgrade
+  "UP", # flake8-bugbear
+  "B", # flake8-simplify
+  "SIM", # isort
+  "I",
 ]
 
 # Allow fix for all enabled rules (when `--fix`) is provided.

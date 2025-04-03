@@ -10,7 +10,7 @@ import glog
 from xlsxwriter import Workbook, Format
 
 CURRENT_PATH_PY = Path(__file__).resolve().parent
-sys.path.append(str(CURRENT_PATH_PY) + "../sim_msg")
+sys.path.append(f"{str(CURRENT_PATH_PY)}../sim_msg")
 sys.path.append(str(CURRENT_PATH_PY))
 
 from sim_msg import location_pb2
@@ -20,7 +20,6 @@ from data_process import DataProcess
 
 @dataclass(order=True)
 class LocationProcess(DataProcess):
-
     def __post_init__(self) -> None:
         super().__post_init__()
 
@@ -113,7 +112,7 @@ class LocationProcess(DataProcess):
                 self.location_json["column"]["lane_id"].append(msg.ego_lane.lanepkid)
                 self.location_json["column"]["dist_2_ref_line"].append(msg.ego_lane.dist_2_ref_line)
         except Exception as e:  # pylint: disable=broad-except
-            glog.error("pb | control data error, " + str(e))
+            glog.error(f"pb | control data error, {str(e)}")
 
     def get_dict_data(self) -> Dict:
         """

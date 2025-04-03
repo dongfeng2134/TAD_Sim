@@ -1573,7 +1573,7 @@ void XOSCReader_1_0_v4::AddIniPos(string& strEntityRef, CRoute& TempRoute, sTagS
       return;
     }
   }
-
+  // Pedestrians
   {
     auto itr = m_mapPedestrians.find(strEntityRef);
     if (itr != m_mapPedestrians.end()) {
@@ -1603,7 +1603,7 @@ void XOSCReader_1_0_v4::AddIniPos(string& strEntityRef, CRoute& TempRoute, sTagS
       return;
     }
   }
-
+  // Obstacles
   {
     auto itr = m_mapObstacles.find(strEntityRef);
     if (itr != m_mapObstacles.end()) {

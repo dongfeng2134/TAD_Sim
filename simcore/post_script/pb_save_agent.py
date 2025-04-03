@@ -44,14 +44,12 @@ class PblogWriter:
         return True
 
     def write_event(self, topic: str, pb_bytes: bytes, t_microseconds: int):
-        if self.pblog_file_handle:
-            if len(topic) > 0:
-                # glog.info("write topic : {}".format(topic))
-                self.pblog_file_handle.write(struct.pack("I", len(topic)))
-                self.pblog_file_handle.write(struct.pack("I", len(pb_bytes)))
-                self.pblog_file_handle.write(struct.pack("l", t_microseconds))
-                self.pblog_file_handle.write(bytes(topic, "utf8"))
-                self.pblog_file_handle.write(pb_bytes)
+        if self.pblog_file_handle and topic != "":
+            self.pblog_file_handle.write(struct.pack("I", len(topic)))
+            self.pblog_file_handle.write(struct.pack("I", len(pb_bytes)))
+            self.pblog_file_handle.write(struct.pack("l", t_microseconds))
+            self.pblog_file_handle.write(bytes(topic, "utf8"))
+            self.pblog_file_handle.write(pb_bytes)
 
     def close(self):
         if self.pblog_file_handle:
@@ -83,9 +81,9 @@ class PblogReader:
         if os.path.exists(self.pb_log_file):
             self.pb_log_file_handle = open(self.pb_log_file, "rb")
             self.pb_log_file_handle.seek(0)
-            glog.info("pb | load protobuf log file from {}".format(self.pb_log_file))
+            glog.info(f"pb | load protobuf log file from {self.pb_log_file}")
         else:
-            glog.info("pb | protobuf log file do not exist, {}".format(self.pb_log_file))
+            glog.info(f"pb | protobuf log file do not exist, {self.pb_log_file}")
             return False
 
         return True
@@ -98,7 +96,7 @@ class PblogReader:
         if self.pb_log_file_handle:
             self.pb_log_file_handle.close()
             self.pb_log_file_handle = None
-            glog.info("pb | close protobuf log file " + self.pb_log_file)
+            glog.info(f"pb | close protobuf log file {self.pb_log_file}")
 
     def read_one(self, event_out: PbEvent) -> bool:
         """
@@ -114,7 +112,7 @@ class PblogReader:
             event_out.payload = self.pb_log_file_handle.read(pb_size[0])
             # glog.info("{}".format(event_out))
         except Exception as e:  # pylint: disable=broad-except
-            glog.info("pb | reach end of read file, {}".format(e))
+            glog.info(f"pb | reach end of read file, {e}")
             return False
 
         return True
@@ -126,11 +124,11 @@ class MsgParser(object):
 
     @abstractmethod
     def parse(self, event: PbEvent) -> bool:
-        raise NotImplementedError("parse in {} is a pure virtual function".format(MsgParser.__class__))
+        raise NotImplementedError(f"parse in {MsgParser.__class__} is a pure virtual function")
 
     @abstractmethod
     def show(self):
-        raise NotImplementedError("show in {} is a pure virtual function".format(MsgParser.__class__))
+        raise NotImplementedError(f"show in {MsgParser.__class__} is a pure virtual function")
 
 
 class TrafficParser(MsgParser):
@@ -152,58 +150,31 @@ class TrafficParser(MsgParser):
         # cars in traffic
         for fellow in self.msg.cars:
             glog.info(
-                "traffic cars: id:{}, t:{}, x:{}, y:{}, heading:{}, v:{}, length:{}, width:{}, height:{}".format(
-                    fellow.id,
-                    fellow.t,
-                    fellow.x,
-                    fellow.y,
-                    fellow.heading,
-                    fellow.v,
-                    fellow.length,
-                    fellow.width,
-                    fellow.height,
-                )
+                f"traffic cars: id:{fellow.id}, t:{fellow.t}, x:{fellow.x}, y:{fellow.y}, heading:{fellow.heading}, v:{fellow.v}, length:{fellow.length}, width:{fellow.width}, height:{fellow.height}"
             )
 
         # dynamic obstacles in traffic
         for fellow in self.msg.dynamicObstacles:
             glog.info(
-                "traffic dynamic obstacles: id:{}, t:{}, x:{}, y:{}, heading:{}, v:{}, length:{}, width:{}, "
-                "height:{}".format(
-                    fellow.id,
-                    fellow.t,
-                    fellow.x,
-                    fellow.y,
-                    fellow.heading,
-                    fellow.v,
-                    fellow.length,
-                    fellow.width,
-                    fellow.height,
-                )
+                f"traffic dynamic obstacles: id:{fellow.id}, t:{fellow.t}, x:{fellow.x}, y:{fellow.y}, heading:{fellow.heading}, v:{fellow.v}, length:{fellow.length}, width:{fellow.width}, height:{fellow.height}"
             )
 
         # traffic lights in traffic
         for light in self.msg.trafficLights:
             glog.info(
-                "traffic lights: id:{}, x:{}, y:{}, heading:{}, color:{}, age:{}".format(
-                    light.id, light.x, light.y, light.heading, light.color, light.age
-                )
+                f"traffic lights: id:{light.id}, x:{light.x}, y:{light.y}, heading:{light.heading}, color:{light.color}, age:{light.age}"
             )
             for lane in light.control_lanes:
                 glog.info(
-                    "traffic lights: tx_road_id:{}, tx_section_id:{}, tx_lane_id:{}".format(
-                        lane.tx_road_id, lane.tx_section_id, lane.tx_lane_id
-                    )
+                    f"traffic lights: tx_road_id:{lane.tx_road_id}, tx_section_id:{lane.tx_section_id}, tx_lane_id:{lane.tx_lane_id}"
                 )
             for phase in light.control_phases:
-                glog.info(" traffic lights: phase:{}".format(phase))
+                glog.info(f" traffic lights: phase:{phase}")
 
     def get_base64(self):
         # 将 proto 消息序列化为字节
         serialized_message = self.msg.SerializeToString()
-        # 将字节转换为 Base64 格式
-        base64_str = base64.b64encode(serialized_message).decode("utf-8")
-        return base64_str
+        return base64.b64encode(serialized_message).decode("utf-8")
 
 
 class LocationParser(MsgParser):
@@ -223,24 +194,13 @@ class LocationParser(MsgParser):
 
     def show(self):
         glog.info(
-            "location: t:{}, x:{}, y:{}, z:{}, vx:{}, vy:{}, heading:{}, angular_vz:{}".format(
-                self.msg.t,
-                self.msg.position.x,
-                self.msg.position.y,
-                self.msg.position.z,
-                self.msg.velocity.x,
-                self.msg.velocity.y,
-                self.msg.rpy.z,
-                self.msg.angular.z,
-            )
+            f"location: t:{self.msg.t}, x:{self.msg.position.x}, y:{self.msg.position.y}, z:{self.msg.position.z}, vx:{self.msg.velocity.x}, vy:{self.msg.velocity.y}, heading:{self.msg.rpy.z}, angular_vz:{self.msg.angular.z}"
         )
 
     def get_base64(self):
         # 将 proto 消息序列化为字节
         serialized_message = self.msg.SerializeToString()
-        # 将字节转换为 Base64 格式
-        base64_str = base64.b64encode(serialized_message).decode("utf-8")
-        return base64_str
+        return base64.b64encode(serialized_message).decode("utf-8")
 
 
 class TrafficRecords4LogsimParser(MsgParser):
@@ -324,7 +284,7 @@ class PblogReaderProcess:
 
         # 读取 pblog 文件, 并处理异常 - 读取失败
         if not self.pblog_reader.open(self.pb_log_file):
-            glog.error("fail to open pblog file {}".format(self.pb_log_file))
+            glog.error(f"fail to open pblog file {self.pb_log_file}")
             return False
 
         # 正常业务处理流程

@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 # /*============================================================================
 # * \file utils.py
 # *
@@ -21,12 +20,12 @@ from functools import wraps
 from pathlib import Path
 from typing import Any, Callable, Dict, List, NamedTuple, Optional, Type, Union, cast
 
-import excel2asam.exceptions as exp
 import numpy as np
 import pandas as pd
 from dynaconf import Dynaconf
 from loguru import logger
 
+import excel2asam.exceptions as exp
 from excel2asam.config import settings
 from excel2asam.map.lib.hadmap_py import Waypoint
 

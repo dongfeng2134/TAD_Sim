@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 import subprocess
 from pathlib import Path
 
@@ -24,8 +23,7 @@ def check_images() -> bool:
     images = subprocess.run(
         f"docker images -q {USER_NAME}/{CONTAINER_NAME}:{TAG}",
         shell=True,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
+        capture_output=True,
         text=True,
     ).stdout
     print(f"{images = }")
@@ -51,7 +49,7 @@ def check_container_id() -> bool:
     print("\033[42;37m[INFO] Checking container id \033[0m")
     # Check is container already exits
     docker_ps_args = ["docker", "ps", "--filter", f"name={CONTAINER_NAME}", "-q", "-a"]
-    result = subprocess.run(docker_ps_args, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+    result = subprocess.run(docker_ps_args, capture_output=True, text=True)
     container_id = result.stdout.strip()
     print(f"{container_id = }")
     return container_id != ""
@@ -96,9 +94,8 @@ def finish_all() -> None:
 
 def main() -> None:
     set_permissions()
-    if not check_images():
-        if not docker_pull():
-            docker_build()
+    if not check_images() and not docker_pull():
+        docker_build()
     if check_container_id():
         stop_rm_container()
     run_container()

@@ -10,7 +10,7 @@ import glog
 from xlsxwriter import Workbook, Format
 
 CURRENT_PATH_PY = Path(__file__).resolve().parent
-sys.path.append(str(CURRENT_PATH_PY) + "../sim_msg")
+sys.path.append(f"{str(CURRENT_PATH_PY)}../sim_msg")
 sys.path.append(str(CURRENT_PATH_PY))
 
 from sim_msg import osi_gps_pb2
@@ -75,7 +75,7 @@ class GpsProcess(DataProcess):
                 self.gps_json["column"]["PosType"].append(msg.PosType)
                 self.gps_json["column"]["Undulation"].append(msg.Undulation)
         except Exception as e:  # pylint: disable=broad-except
-            glog.error("pb | chassis data error, " + str(e))
+            glog.error(f"pb | chassis data error, {str(e)}")
 
     def get_dict_data(self) -> Dict:
         """

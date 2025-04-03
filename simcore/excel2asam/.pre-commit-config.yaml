@@ -15,11 +15,14 @@ repos:
         exclude: '^.vscode'
 
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.1.13
+    # Ruff version.
+    rev: v0.9.10
     hooks:
-      - id: ruff  # Run the linter.
+      # Run the linter.
+      - id: ruff
         args: [ --fix ]
-      - id: ruff-format  # Run the formatter.
+      # Run the formatter.
+      - id: ruff-format
 
   - repo: https://github.com/pre-commit/mirrors-mypy
     rev: v1.8.0

@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 # /*============================================================================
 # * \file test_qt.py
 # * \brief validate qt.
@@ -11,14 +10,14 @@
 # /*============================================================================
 from __future__ import annotations
 
+import inspect
 from datetime import datetime
 from pathlib import Path
-import inspect
 
 import pytest
 
-from excel2asam.producer import LocalProducer
 import excel2asam.exceptions as exp
+from excel2asam.producer import LocalProducer
 
 # 当前文件夹路径
 PATHDIR_CUR = Path(__file__).resolve().parent

@@ -10,7 +10,7 @@ import glog
 from xlsxwriter import Workbook, Format
 
 CURRENT_PATH_PY = Path(__file__).resolve().parent
-sys.path.append(str(CURRENT_PATH_PY) + "../sim_msg")
+sys.path.append(f"{str(CURRENT_PATH_PY)}../sim_msg")
 sys.path.append(str(CURRENT_PATH_PY))
 
 from sim_msg import traffic_pb2
@@ -20,7 +20,6 @@ from data_process import DataProcess
 
 @dataclass(order=True)
 class TrafficCarProcess(DataProcess):
-
     def __post_init__(self) -> None:
         super().__post_init__()
 
@@ -90,7 +89,7 @@ class TrafficCarProcess(DataProcess):
                     self.traffic_json["column"]["ttc_euclidean_distance"].append(fellow.fcw.ttc_euclidean_distance)
                     self.traffic_json["column"]["thw_euclidean_distance"].append(fellow.fcw.thw_euclidean_distance)
         except Exception as e:  # pylint: disable=broad-except
-            glog.error("pb | traffic data error, " + str(e))
+            glog.error(f"pb | traffic data error, {str(e)}")
 
     def get_dict_data(self) -> Dict:
         """

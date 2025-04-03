@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 # /*============================================================================
 # * \file parser.py
 # * \brief This file is used to parse the file
@@ -21,11 +20,11 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import List
 
-import excel2asam.exceptions as exp
 import pandas as pd
 import requests
 from loguru import logger
 
+import excel2asam.exceptions as exp
 from excel2asam.config import settings
 
 

@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 import sys
 from pathlib import Path
 
@@ -8,7 +7,6 @@ import pytest
 current_path_py = Path(__file__).resolve().parent
 sys.path.append(f"{current_path_py.parent}/build/bin/Release")
 import hadmap_py
-
 
 PATHDIR_MAPS = current_path_py / "maps"
 

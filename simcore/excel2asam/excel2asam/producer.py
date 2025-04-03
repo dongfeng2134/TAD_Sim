@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 # /*============================================================================
 # * \file producer.py
 # * \brief Define scene by Excel to generate scene file in OpenSCENARIO (.xosc)
@@ -34,8 +33,8 @@ from excel2asam.map.map_manager import MapManager
 from excel2asam.map.mapper import RealMapper, VirtualMapper
 from excel2asam.openx.wrapper_xodr import GenXodr
 from excel2asam.openx.wrapper_xosc import GenXosc
-from excel2asam.utils import SceneFilter, deep_update_settings
 from excel2asam.parser import Parser
+from excel2asam.utils import SceneFilter, deep_update_settings
 
 
 @dataclass(order=True)

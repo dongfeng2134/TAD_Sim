@@ -2,18 +2,16 @@
 # -*- coding: utf-8 -*-
 
 from dataclasses import dataclass
-from typing import Dict
 
 from xlsxwriter import Workbook, Format
 
 
 @dataclass(order=True)
 class DataProcess(object):
-
     def __post_init__(self) -> None:
         pass
 
-    def process_data(self, event: Dict) -> None:
+    def process_data(self, event: dict) -> None:
         """
         Define a method that handles the data, receiving an event as a parameter.
 
@@ -26,7 +24,7 @@ class DataProcess(object):
 
         pass
 
-    def get_dict_data(self) -> Dict:
+    def get_dict_data(self) -> dict:
         """
         Get and return dictionary data
 
@@ -61,7 +59,4 @@ class DataProcess(object):
             bool
 
         """
-        if value_in >= 2147483640:
-            return False
-
-        return True
+        return value_in < 2147483640

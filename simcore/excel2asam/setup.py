@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 # /*============================================================================
 # * \file setup.py
 # * \brief Package the source code.
@@ -17,7 +16,7 @@
 # /*============================================================================
 import setuptools
 
-with open("README.md", "r", encoding="utf-8") as f:
+with open("README.md", encoding="utf-8") as f:
     long_description = f.read()
 
 with open("requirements.txt") as f:

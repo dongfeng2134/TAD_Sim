@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 # /*============================================================================
 # * \file test_xsd.py
 # * \brief validate xml meet xsd rule.

@@ -10,7 +10,7 @@ import glog
 from xlsxwriter import Workbook, Format
 
 CURRENT_PATH_PY = Path(__file__).resolve().parent
-sys.path.append(str(CURRENT_PATH_PY) + "../sim_msg")
+sys.path.append(f"{str(CURRENT_PATH_PY)}../sim_msg")
 sys.path.append(str(CURRENT_PATH_PY))
 
 from sim_msg import vehState_pb2
@@ -20,7 +20,6 @@ from data_process import DataProcess
 
 @dataclass(order=True)
 class ChassisProcess(DataProcess):
-
     def __post_init__(self) -> None:
         super().__post_init__()
 
@@ -75,7 +74,7 @@ class ChassisProcess(DataProcess):
                 self.vehstate_json["column"]["gearEngaged"].append(msg.powertrain_state.gear_engaged)
                 self.vehstate_json["column"]["EngineTrq"].append(msg.chassis_state.ESP_MasterCylindBrakePress)
         except Exception as e:  # pylint: disable=broad-except
-            glog.error("pb | chassis data error, " + str(e))
+            glog.error(f"pb | chassis data error, {str(e)}")
 
     def get_dict_data(self) -> Dict:
         """

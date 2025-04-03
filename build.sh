@@ -25,7 +25,8 @@ TADSIM_BUILD_SCENARIO="$TADSIM_BUILD/scenario"
 echo "=== Begin clean"
 # find . -type f -iname "*.sh" -exec chmod +x {} \;
 # find . -type d \( -name "build" -o -name "node_modules" \) -exec rm -rf {} + 2>/dev/null
-[ -d "$TADSIM_BUILD" ] && rm -rf "$TADSIM_BUILD" || true
+# [ -d "$TADSIM_BUILD" ] && rm -rf "$TADSIM_BUILD" || true
+build_project "tools" "clean.sh"
 echo "=== End clean"
 
 # ====== Start compiling ======

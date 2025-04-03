@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 # /*============================================================================
 # * \file wrapper_xodr_factory.py
 # * \brief .xodr file generator

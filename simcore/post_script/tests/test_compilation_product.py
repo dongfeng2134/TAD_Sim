@@ -50,7 +50,7 @@ class TestCompilationProduct(Base):
         # 根据当前系统环境获取虚拟环境的激活指令
         if current_os == "Windows":
             name = f"{name}.exe"
-        elif current_os == "Linux" or current_os == "Darwin":
+        elif current_os in ["Linux", "Darwin"]:
             name = f"{name}"
         else:
             print("not support current os")

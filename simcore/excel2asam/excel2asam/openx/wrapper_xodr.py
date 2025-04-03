@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 # /*============================================================================
 # * \file wrapper_xodr.py
 # * \brief Generate xodr file conforming to OpenDRIVE (V1.4) standard.
