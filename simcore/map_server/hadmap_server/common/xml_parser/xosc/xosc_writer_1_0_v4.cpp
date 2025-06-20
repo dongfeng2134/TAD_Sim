@@ -654,13 +654,13 @@ bool XOSCWriter_1_0_v4::SaveEnvironmentInit(osc::OpenScenario& xosc, CEnvironmen
     ParameterDeclaration sParamTemperature = CreateParameterDeclaration("tmperature", "double", strTemperature);
     sparameterDeclarations.sub_ParameterDeclaration.push_back(sParamTemperature);
     // user
-    ParameterDeclaration sParamUsingSunByUser =
-        CreateParameterDeclaration(("UsingSunByUser"), ("osc::Boolean"), ("false"));
+    ParameterDeclaration sParamUsingSunByUser = CreateParameterDeclaration(("UsingSunByUser"), ("boolean"), ("false"));
     sparameterDeclarations.sub_ParameterDeclaration.push_back(sParamUsingSunByUser);
 
     RoadCondition sRoadCondition;
     sRoadCondition._frictionScaleFactor = "1";
     Environment environments;
+    environments._name = environment_name;
     environments.sub_TimeOfDay = timeofday;
     environments.sub_Weather = sWeather;
     environments.sub_RoadCondition = sRoadCondition;
